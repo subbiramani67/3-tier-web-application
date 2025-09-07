@@ -1,0 +1,36 @@
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const { sequelize, Service, Booking } = require("./TransactionService");
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// Health check
+app.get("/api/health", (req, res) => res.json({ ok: true }));
+
+// List services
+app.get("/api/services", async (req, res) => {
+  const services = await Service.findAll();
+  res.json(services);
+});
+
+// Book service
+app.post("/api/bookings", async (req, res) => {
+  const { serviceId, bookingDate } = req.body;
+  const booking = await Booking.create({ serviceId, bookingDate });
+  res.json(booking);
+});
+
+// List bookings
+app.get("/api/bookings", async (req, res) => {
+  const bookings = await Booking.findAll({ include: [Service] });
+  res.json(bookings);
+});
+
+const PORT = 4000;
+app.listen(PORT, async () => {
+  await sequelize.sync();
+  console.log(`🚀 Car Wash backend running on http://localhost:${PORT}`);
+});

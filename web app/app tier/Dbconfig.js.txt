@@ -1,0 +1,8 @@
+const { Sequelize } = require("sequelize");
+
+const sequelize = new Sequelize("carwash_db", "root", "changeme", {
+  host: "localhost",
+  dialect: "mysql"
+});
+
+module.exports = sequelize;

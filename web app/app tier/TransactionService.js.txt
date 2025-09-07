@@ -1,0 +1,19 @@
+const { DataTypes } = require("sequelize");
+const sequelize = require("./DbConfig");
+
+// Service table
+const Service = sequelize.define("Service", {
+  name: DataTypes.STRING,
+  price: DataTypes.FLOAT,
+});
+
+// Booking table
+const Booking = sequelize.define("Booking", {
+  bookingDate: DataTypes.DATE,
+  status: { type: DataTypes.ENUM("pending","confirmed","completed"), defaultValue: "pending" }
+});
+
+Service.hasMany(Booking);
+Booking.belongsTo(Service);
+
+module.exports = { Service, Booking, sequelize };
